@@ -1,0 +1,46 @@
+<script>
+    function soma (a,b){
+        return a+b
+    }
+
+    console.log(soma(3,5))
+
+
+function mensagem(){
+    console.log("ola")
+}
+
+mensagem()
+
+
+//escopo - define onde suas variaveis podem ser acessadas
+
+// escopo global - 
+let nome = "joao do escopo"
+function mostraNome(){
+    console.log(nome); 
+}
+mostraNome()
+
+
+//escopo  local
+function exemplo (){
+    let valor = 45
+    console.log(valor)
+}
+
+exemplo()
+console.log(valor)
+
+
+//O que this - ele representa o contexto atual de execução
+
+const pessoa ={
+    nome: "Carlos",
+    falar: function(){
+        console.log(`meu nome é ${this.nome}`)
+    }
+}
+pessoa.falar();
+
+</script>

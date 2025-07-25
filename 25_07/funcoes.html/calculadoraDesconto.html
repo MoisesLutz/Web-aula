@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+    <h2>Calculadora de Desconto</h2>
+    <input type="number" id="preco" placeholder="Digite o preço">
+    <button onclick="MostrarDesconto10">Aplicar 10%</button>
+    <button onclick="MostrarDesconto25">Aplicar 20%</button>
+    </div>
+
+    <script>
+
+function calcularDesconto(valorOriginal, percentual){
+    let Desconto = valorOriginal * (percentual/100)
+    let valorFinal = valorOriginal - Desconto
+    return valorFinal
+}
+
+function MostrarDesconto10(){
+      let preco = parseFloat(document.getElementById("preco").value)
+      if(isNaN (preco) || preco <= 0){
+        document.getElementById("resultado").innerText = "digite um valor valido"
+        return
+
+      }
+      let final = calcularDesconto(preco, 10)
+      document.getElementById("resultado").innerText = "Valor com desconto de 10%" `${final.toFixed(2)}`
+
+}
+    </script>
+</body>
+</html>
