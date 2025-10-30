@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Tarefas</title>
+</head>
+<body>
+    <h1>Lista de Tarefas</h1>
+
+    <!-- Formulário para criar tarefa -->
+    <h3>Adicionar Nova Tarefa</h3>
+    <form id="formTarefa">
+        <label>
+            Descrição:
+            <input type="text" id="descricao" required>
+        </label><br><br>
+
+        <label>
+            Status:
+            <select id="status" required>
+                <option value="Pendente">Pendente</option>
+                <option value="Em andamento">Em andamento</option>
+                <option value="Concluída">Concluída</option>
+            </select>
+        </label><br><br>
+
+        <label>
+            Data de Conclusão:
+            <input type="date" id="dataConclusao">
+        </label><br><br>
+
+        <button type="submit">Adicionar Tarefa</button>
+    </form>
+
+    <hr>
+
+    <button onclick="carregarTarefas()">Atualizar Lista</button>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Descrição</th>
+                <th>Status</th>
+                <th>Data de Conclusão</th>
+            </tr>
+        </thead>
+        <tbody id="tabelaTarefas">
+            <tr>
+                <td colspan="4">Carregando...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Importa o seu arquivo JS com as funções da API -->
+    <script src="tarefas.js"></script>
+
+    <script>
+        async function carregarTarefas() {
+            const tabela = document.getElementById("tabelaTarefas");
+            tabela.innerHTML = `<tr><td colspan="4">Carregando...</td></tr>`;
+
+            try {
+                const tarefas = await listarTarefas();
+                if (!tarefas.length) {
+                    tabela.innerHTML = `<tr><td colspan="4">Nenhuma tarefa encontrada.</td></tr>`;
+                    return;
+                }
+
+                tabela.innerHTML = "";
+                tarefas.forEach(t => {
+                    const linha = document.createElement("tr");
+                    linha.innerHTML = `
+                        <td>${t.id}</td>
+                        <td>${t.descricao}</td>
+                        <td>${t.status}</td>
+                        <td>${t.dataConclusao || "-"}</td>
+                    `;
+                    tabela.appendChild(linha);
+                });
+            } catch (erro) {
+                tabela.innerHTML = `<tr><td colspan="4" style="color:red;">Erro: ${erro.message}</td></tr>`;
+            }
+        }
+
+        // Adicionar tarefa ao enviar o formulário
+        document.getElementById("formTarefa").addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const descricao = document.getElementById("descricao").value.trim();
+            const status = document.getElementById("status").value;
+            const dataConclusao = document.getElementById("dataConclusao").value || null;
+
+            if (!descricao) {
+                alert("A descrição é obrigatória!");
+                return;
+            }
+
+            const novaTarefa = { descricao, status, dataConclusao };
+
+            try {
+                await criarTarefa(novaTarefa);
+                alert("Tarefa criada com sucesso!");
+                document.getElementById("formTarefa").reset();
+                carregarTarefas();
+            } catch (erro) {
+                alert("Erro ao criar tarefa: " + erro.message);
+            }
+        });
+
+        // Carrega as tarefas ao abrir a página
+        window.onload = carregarTarefas;
+    </script>
+</body>
+</html>
